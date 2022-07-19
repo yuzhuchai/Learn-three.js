@@ -2,9 +2,47 @@
 
 [Three.js Official Site](https://threejs.org/)
 
+## Installing Three.js
+[official doc](https://threejs.org/docs/#manual/en/introduction/Installation)
+
+* With CDN
+
+installing Three with CDN or local files must include 'type=module' in any script that refrences it, also use importmap which resolves the bare module specifier 'three'.
+
+        <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+
+        <script type="importmap">
+        {
+            "imports": {
+            "three": "https://unpkg.com/three@<version>/build/three.module.js"
+            }
+        }
+        </script>
+
+        <script type="module" src='myScript.js'></script>
+
+
+note that in the CDN Link you must specify the version number
+
+also Since Import maps are not yet supported by all browsers, it is necessary to add the polyfill es-module-shims.js.
+
+* With npm
+
+with npm install three
+
+* to import all THREE content in JS 
+
+
+        import * as THREE from 'three';
+
+with CDN, Not all features are accessed through the three entrypoint. Other popular parts of the library — such as controls, loaders, and post-processing effects — must be imported from the examples/jsm subfolder
+
+
+
 
 [01.Basic Scene](#baisc-componments-scene-setup) - [Code]()
-[02.Drawing Line](#) - [Code]()
+
+[02.Drawing Line](#different-syntax) - [Code]()
 
 
 ### BAISC COMPONMENTS SCENE SETUP 
@@ -71,7 +109,35 @@ with a callback function, we create a loop that cause the renderer to draw the s
 Finally we need to animate the cube, with modifying the positions this should be placed after requestAnimationFrame and before the render function.
 
 
+### DIFFERENT SYNTAX
+
+we can set the camera position in the beginning with 
+
+        camera.position.set( 0, 0, 100 ); 
+
+vs 
+        
+        camera.position.z = 100
 
 
+### CREATE LINE with BufferGeometry
+
+lines are created with an array of THREE.Vector3 given (tx,ty,tz) position values 
+
+        const points = [];
+        points.push( new THREE.Vector3( - 10, 0, 0 ) );
+        points.push( new THREE.Vector3( 0, 10, 0 ) );
+        points.push( new THREE.Vector3( 10, 0, 0 ) );
+
+        const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+        const line = new THREE.Line( geometry, material );
+
+Here we are using [BufferGeometry](https://threejs.org/docs/index.html?q=bufferG#api/en/core/BufferGeometry) instead of [BoxGeometry](https://threejs.org/docs/index.html?q=box#api/en/geometries/BoxGeometry)
+
+A representation of mesh, line, or point geometry. Includes vertex positions, face indices, normals, colors, UVs, and custom attributes within buffers, reducing the cost of passing all this data to the GPU.
 
 
+### TEXT GEOMETRY 
+
+there are many different ways to create 3D texts 
