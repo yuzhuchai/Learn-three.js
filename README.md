@@ -16,6 +16,8 @@
 [05.Materials and Light](#Materials) - [Code](https://github.com/yuzhuchai/Learn-three.js/blob/main/05_materials.js)
 
 
+[06.Environment Map](#environment-mapping) - [Code](https://github.com/yuzhuchai/Learn-three.js/blob/main/06_envMap.js)
+
 
 ## Installing Three.js
 [official doc](https://threejs.org/docs/#manual/en/introduction/Installation)
@@ -253,6 +255,9 @@ A more complicated method to change the color:
 
 ### MATERIALS and Lights 
 
+https://github.com/mrdoob/three.js/blob/dev/docs/scenes/material-browser.html
+
+
 In the following we are using [sphereGeometry](https://threejs.org/docs/#api/en/geometries/SphereGeometry) as a standard, also applying the materials back to the text object. 
 
         sphereGeometry(r, widthSegment, heightSegment)
@@ -272,11 +277,59 @@ This light cannot be used to cast shadows as it does not have a direction.
         scene.add( light );
 
 
-#### 1. MeshBaiscMatierial 
 
-essentially a constant color, no depth, no nothing, just a color. 
+#### 1. MeshBaiscMatierial 
+essentially a constant color, no depth, no nothing, just a color.
+* change color
+* toggle wireframe 
 
 #### 2. MeshDepthMaterial
+A material for drawing geometry by depth. Depth is based off of the camera near and far plane. White is nearest, black is farthest.
+* toggle wireframe 
+
+#### 3. MeshLambertMaterial
+A material for non-shiny surfaces, without specular highlights.
+* toggle wireframe 
+* change color
+* change emmisive color = the same as change color 
+* material have reflectivity parameter, the simple way 
+* material have refractionRatio parameter
+
+
+#### 4. NormalMaterial 
+A material that maps the normal vectors to RGB colors.
+* toggle wireframe 
+
+
+#### 5. PhongMaterial 
+A material for shiny surfaces with specular highlights.
+* toggle wireframe 
+* change emmisive color = the same as change color 
+* change specular color = the same as change color
+* material have shininess parameter, the simple way 
+* material have reflectivity parameter, 
+* material have refractionRatio parameter
 
 
 
+
+#### 6. StandardMaterial 
+A standard physically based material, using Metallic-Roughness workflow.
+* toggle wireframe 
+* change color
+* change emmisive color = the same as change color 
+* material have roughness parameter, the simple way 
+* material have metalness parameter, 
+* 
+
+
+#### 7. ToonMaterial
+A material implementing toon shading.
+* toggle wireframe 
+
+
+
+we can add environment map and texture mapping to the materials, see the next example:
+
+
+### ENVIRONMENT MAPPING 
