@@ -2,12 +2,21 @@
 
 [Three.js Official Site](https://threejs.org/)
 
+[00.Installing Three.js](#installing-threejs)
+
+[01.Basic Scene](#baisc-componments-scene-setup) - [Code]()
+
+[02.Drawing Line](#different-syntax) - [Code]()
+
+[03.Text](#text-geometry) - [Code]()
+
+
 ## Installing Three.js
 [official doc](https://threejs.org/docs/#manual/en/introduction/Installation)
 
 * With CDN
 
-installing Three with CDN or local files must include 'type=module' in any script that refrences it, also use importmap which resolves the bare module specifier 'three'.
+installing Three with CDN or local files must include `type=module` in any script that refrences it, also use importmap which resolves the bare module specifier 'three'.
 
         <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
 
@@ -40,10 +49,6 @@ with CDN, Not all features are accessed through the three entrypoint. Other popu
 
 
 
-[01.Basic Scene](#baisc-componments-scene-setup) - [Code]()
-
-[02.Drawing Line](#different-syntax) - [Code]()
-
 
 ### BAISC COMPONMENTS SCENE SETUP 
 
@@ -62,6 +67,9 @@ Like any 3D environment, we need some basic components when creating with Three.
    1. The first attribute is the field of view. FOV is the extent of the scene that is seen on the display at any given moment. The value is in degrees.
    2. The second one is the aspect ratio. You almost always want to use the width of the element divided by the height, or you'll get the same result as when you play old movies on a widescreen TV - the image looks squished.
    3. The next two attributes are the near and far clipping plane. What that means, is that objects further away from the camera than the value of far or closer than near won't be rendered. 
+   
+ ![FOV and coordinate system](assets/FOV.png)
+
 3. render: use WebGL 
 4. then we need to set the size of the render, and add the renderer to the dom element to display on the webpage 
 
@@ -81,7 +89,7 @@ Now we have the scene setup we need to add geomentries inside the scene
 1. to create the object we ned a boxGeomentry, This is an object that containes all the points and fill faces of the cube. 
 2. a Geometry need a material,
 3. then we need a mesh, this is an obaject that takes a geometry and aplies the material to it.
-4. with scene.add we can add this mesh to the scene, with default it will be add to the (0,0,0) position 
+4. with scene.add we can add this mesh to the scene, with default it will be add to the `(0,0,0)` position 
 5. we need to move the camera back a little , so the camera is not inside the shape. 
 
 
@@ -106,7 +114,7 @@ with a callback function, we create a loop that cause the renderer to draw the s
         cube.rotation.z += 0.03;
 
 
-Finally we need to animate the cube, with modifying the positions this should be placed after requestAnimationFrame and before the render function.
+Finally we need to animate the cube, with modifying the positions this should be placed after `requestAnimationFrame()` and before the `render()` function.
 
 
 ### DIFFERENT SYNTAX
@@ -140,4 +148,65 @@ A representation of mesh, line, or point geometry. Includes vertex positions, fa
 
 ### TEXT GEOMETRY 
 
-there are many different ways to create 3D texts 
+there are many different ways to create 3D texts method 4 from the [official doc](https://threejs.org/docs/index.html#manual/en/introduction/Creating-text) using text geometry
+
+* Using text geometry you need fontLoader and textGeometry Modules
+    
+        import * as THREE from 'three';
+        import { FontLoader } from 'https://unpkg.com/three@0.142.0/examples/jsm/loaders/FontLoader.js';
+        import { TextGeometry } from 'https://unpkg.com/three@0.142.0/examples/jsm/geometries/TextGeometry.js';
+
+（With CDN）
+
+
+### Using [FontLoader](https://threejs.org/docs/#examples/en/loaders/FontLoader) 
+
+to display text Geometry we need a font loader. 
+* font loader is a class for lading a font in JSON format, Returns a font that is an array of **shapes** repesenting the font. 
+* we need a font file in the JSON formant, which can be converted using [facetype.js](https://gero3.github.io/facetype.js/)
+* After using the fontloader, the TextGoemetry should be created as a callback function inside the `loader.load` function, becasue The loader is asynchronous, and the function (callback) you give fires when the loading is done.
+  
+        let loader = new FontLoader()
+        loader.load('yourfont.json', function(font){
+        })
+
+* FontLoader has a .loader function, the first parameter need a file path to the font, the second parameter need a callback function (onload) with an argument which is the font, it will be called when loading is complete
+* we are initilizing the text geometry inside this callback function: 
+
+        loader.load('yourfont.json', function(font){
+            let textGeo = new TextGeometry('some text', {
+                font: font, 
+                size: 8,
+                height: 5, 
+                curveSegments: 12, 
+                bevelEnabled: true,
+                bevelThickness: 10,
+                bevelSize: 8,
+                bevelOffset: 0,
+                bevelSegments: 5
+            })
+        })
+
+* [TextGeometry](https://threejs.org/docs/#examples/en/geometries/TextGeometry) generate text as a single geometry, which needs a string of text, and a set of parameters consisiting of loaded font and setting for the geometry's parent [ExtrudeGeometry](https://threejs.org/docs/#api/en/geometries/ExtrudeGeometrys). 
+
+* finally inside the callback function right below the textgeometry we need to create material, mesh, and then add the mesh to the scene. 
+
+* To redner the text on the screen, the trick is we must us `requestAnimationFrame`?? need verify 
+
+        function render() {
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+        }
+        render();
+
+
+* couple of things to note: 
+  
+  1. The FontLoader and TextGeometry module have been moved to different folders, in some earlier examples importing the modules is not correct, and they use THREE.FontLoader, which will cause error 
+  2. to set the correct camera position and the font size is very tricky. we can start with a small font size, like 8, then move the camera back, like 500. 
+  3. Using baiscmaterial create text with no depth
+   
+
+
+
+
