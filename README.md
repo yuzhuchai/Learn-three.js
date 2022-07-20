@@ -4,11 +4,17 @@
 
 [00.Installing Three.js](#installing-threejs)
 
-[01.Basic Scene](#baisc-componments-scene-setup) - [Code]()
+[01.Basic Scene](#baisc-componments-scene-setup) - [Code](https://github.com/yuzhuchai/Learn-three.js/blob/main/01_baiscScene.js)
 
-[02.Drawing Line](#different-syntax) - [Code]()
+[02.Drawing Line](#different-syntax) - [Code](https://github.com/yuzhuchai/Learn-three.js/blob/main/02_line.js)
 
-[03.Text](#text-geometry) - [Code]()
+[03.Text](#text-geometry) - [Code](https://github.com/yuzhuchai/Learn-three.js/blob/main/03_text.js)
+
+[04.Gui](#Materials) - [Code](https://github.com/yuzhuchai/Learn-three.js/blob/main/04_Gui.js)
+
+
+[05.Materials and Light](#Materials) - [Code](https://github.com/yuzhuchai/Learn-three.js/blob/main/05_materials.js)
+
 
 
 ## Installing Three.js
@@ -205,8 +211,72 @@ to display text Geometry we need a font loader.
   1. The FontLoader and TextGeometry module have been moved to different folders, in some earlier examples importing the modules is not correct, and they use THREE.FontLoader, which will cause error 
   2. to set the correct camera position and the font size is very tricky. we can start with a small font size, like 8, then move the camera back, like 500. 
   3. Using baiscmaterial create text with no depth
-   
 
+
+### GUI 
+
+after we setup a scene, we'd like to add some gui controls so we can change the parameters of certain objects easily, this is also good for debugging.
+
+we need to use the dat.gui library, which we can find [here](https://cdnjs.com/libraries/dat-gui) as CDN, but since we have beem using modules, we'd like to keep our code consistant: by importing [modules](https://github.com/dataarts/dat.gui/blob/master/build/dat.gui.module.js)
+
+we can download this file and save it into the module file
+
+        import { GUI } from "../modules/dat.gui.module.js"
+        let gui = new GUI()
+
+This Dat.gui library allows us to create "folders" for indivitaul controls with `gui.addFolder('folderName')`: 
+
+        const transformFolder = gui.addFolder('transform')
+        transformFolder.add(object, parameter, minValue, MaxValue, step).name('controlName')
+
+
+* using `.add()` we can add sliders and contols to this folder, 
+* using `.name()` we are able to name this control 
+* remmebr sicne we are updating the values, we need to use requestAnimationFrame instead of only rendering it once.
+
+
+A more complicated method to change the color: 
+
+        const materialFolder = gui.addFolder('color')
+        const materialParams = {
+            baiscColor: material.color.getHex()
+        }
+        materialFolder.addColor(materialParams, 'baiscColor').onChange(value => material.color.set(value))
+
+        materialFolder.add(material, 'wireframe')
+
+
+* with changing the material colors, we need to be able to update those colors on change, 
+* adding 'wireframe' allows us to toggle wireframe 
+  
+
+
+### MATERIALS and Lights 
+
+In the following we are using [sphereGeometry](https://threejs.org/docs/#api/en/geometries/SphereGeometry) as a standard, also applying the materials back to the text object. 
+
+        sphereGeometry(r, widthSegment, heightSegment)
+
+widthSegments — number of horizontal segments. Minimum value is 3, and the default is 32.
+
+heightSegments — number of vertical segments. Minimum value is 2, and the default is 16.
+
+before we look at materials, we need to also look at the lights, 
+#### 1. Ambient Light 
+
+This light globally illuminates all objects in the scene equally.
+
+This light cannot be used to cast shadows as it does not have a direction.
+
+        const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+        scene.add( light );
+
+
+#### 1. MeshBaiscMatierial 
+
+essentially a constant color, no depth, no nothing, just a color. 
+
+#### 2. MeshDepthMaterial
 
 
 
