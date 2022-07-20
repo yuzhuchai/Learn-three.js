@@ -17,22 +17,41 @@ renderer.setSize(width, height);
 document.body.appendChild(renderer.domElement)
 
 
+// creating lights -------------------------------------------------------
+const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+scene.add( light );
+
+const dirLight = new THREE.DirectionalLight( 0xffffff, 0.125 );
+dirLight.position.set( 0, 0, 1 ).normalize();
+scene.add( dirLight );
+
+const pointLight = new THREE.PointLight( 0xffffff, 1.5 );
+pointLight.position.set( 0, 100, 90 );
+scene.add( pointLight );
+
+
 
 let loader = new FontLoader()
 loader.load('fonts/helvetiker_bold.typeface.json', function(font){
     let textGeo = new TextGeometry('plums in the icebox', {
         font:font, 
-        size: 8,
-		height: 5,
-		curveSegments: 12,
-		bevelEnabled: true,
-		bevelThickness: 10,
-		bevelSize: 8,
-		bevelOffset: 0,
-		bevelSegments: 5
+        size: 20,
+        height: 5,
+        curveSegments: 20, 
+        bevelEnabled: true,
+        bevelThickness: 1,
+        bevelSize: 1,
+        bevelOffset: 0,
+        bevelSegments: 20
     })
 
-    const material = new THREE.MeshBasicMaterial( { color: 0x00ff00} )
+    // const material = new THREE.MeshBasicMaterial( { color: 0x00ff00} )
+
+    const material = new THREE.MeshPhongMaterial({ 
+      color: 0x3e5df0,
+      specular:0x111111,
+      shineness: 14,
+    })
 
     const textMesh = new THREE.Mesh( textGeo, material )
     scene.add(textMesh)
